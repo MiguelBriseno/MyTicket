@@ -18,7 +18,8 @@
     @else
         <div class="space-y-4">
             @foreach($tickets as $ticket)
-                <div class="bg-white rounded-lg border border-gray-200 p-5">
+                <a href="{{ route('portal.show', $ticket) }}"
+                   class="block bg-white rounded-lg border border-gray-200 p-5 hover:border-amber-300 transition-colors">
                     <div class="flex items-start justify-between gap-4">
                         <div>
                             <p class="text-xs text-gray-400 mb-1">#{{ $ticket->id }}</p>
@@ -55,7 +56,7 @@
                             </span>
                         </div>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
     @endif

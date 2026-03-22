@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Filament\Resources\TicketResource\RelationManagers;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class TicketResource extends Resource
 {
@@ -76,6 +77,20 @@ class TicketResource extends Resource
                         )
                         ->searchable()
                         ->preload(),
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('attachments')
+                        ->label('Archivos adjuntos')
+                        ->collection('attachments')
+                        ->multiple()
+                        ->acceptedFileTypes([
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/webp',
+                            'application/pdf',
+                        ])
+                        ->maxSize(10240)
+                        ->downloadable()
+                        ->columnSpanFull(),
                     Forms\Components\Hidden::make('created_by')
                         ->default(fn() => Auth::id()),
                 ])->columns(2),

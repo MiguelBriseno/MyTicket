@@ -1,0 +1,14 @@
+[90m= [39m[34;4mApp\Models\Ticket[39;24m {#7560
+    [34mid[39m: [35m2[39m,
+    [34mtitle[39m: "[32mTicket de prueba[39m",
+    [34mdescription[39m: "[32mEste es un ticket de prueba[39m",
+    [34mstatus[39m: "[32mresolved[39m",
+    [34mpriority[39m: "[32mmedium[39m",
+    [34mdepartment_id[39m: [35m3[39m,
+    [34mcreated_by[39m: [35m5[39m,
+    [34massigned_to[39m: [36mnull[39m,
+    [34mresolved_at[39m: [36mnull[39m,
+    [34mcreated_at[39m: "[32m2026-03-22 16:34:32[39m",
+    [34mupdated_at[39m: "[32m2026-03-22 16:51:23[39m",
+  }
+

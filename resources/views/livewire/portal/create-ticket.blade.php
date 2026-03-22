@@ -48,6 +48,38 @@
                     @endforeach
                 </select>
             </div>
+
+            <div class="col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Asignar a
+                    <span class="text-gray-400 font-normal">(opcional)</span>
+                </label>
+                <select wire:model="assigned_to"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    <option value="">Sin asignar</option>
+                    @foreach($agents as $agent)
+                        <option value="{{ $agent->id }}">{{ $agent->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Archivos adjuntos
+                <span class="text-gray-400 font-normal">(imágenes o PDF, máx. 10MB por archivo)</span>
+            </label>
+            <input wire:model="attachments" type="file" multiple
+                   accept=".jpg,.jpeg,.png,.gif,.webp,.pdf"
+                   class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+            @error('attachments.*')
+            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+            @if(count($attachments) > 0)
+                <p class="text-xs text-gray-500 mt-1">
+                    {{ count($attachments) }} archivo(s) seleccionado(s)
+                </p>
+            @endif
         </div>
 
         <div class="flex items-center justify-between pt-2">

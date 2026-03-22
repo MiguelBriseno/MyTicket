@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Ticket extends Model
+class Ticket extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $fillable = [
         'title',
         'description',
@@ -22,6 +27,26 @@ class Ticket extends Model
     protected $casts = [
         'resolved_at' => 'datetime',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('attachments')
+            ->acceptsMimeTypes([
+                'image/jpeg',
+                'image/png',
+                'image/gif',
+                'image/webp',
+                'application/pdf',
+            ]);
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(200)
+            ->height(200)
+            ->nonQueued();
+    }
 
     public function department(): BelongsTo
     {
@@ -43,7 +68,6 @@ class Ticket extends Model
         return $this->hasMany(Comment::class);
     }
 
-    // Helpers de estado
     public function isResolved(): bool
     {
         return in_array($this->status, ['resolved', 'closed']);
@@ -52,20 +76,18 @@ class Ticket extends Model
     public function markAsResolved(): void
     {
         $this->update([
-            'status' => 'resolved',
+            'status'      => 'resolved',
             'resolved_at' => now(),
         ]);
     }
 
     protected static function booted(): void
     {
-        // Al asignar un agente, notificarle
         static::updated(function (Ticket $ticket) {
             if ($ticket->wasChanged('assigned_to') && $ticket->assignee) {
                 $ticket->assignee->notify(new \App\Notifications\TicketAssigned($ticket));
             }
 
-            // Al resolver, notificar al creador
             if ($ticket->wasChanged('status') && $ticket->status === 'resolved') {
                 $ticket->creator->notify(new \App\Notifications\TicketResolved($ticket));
             }
