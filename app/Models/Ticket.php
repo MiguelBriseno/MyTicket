@@ -56,4 +56,19 @@ class Ticket extends Model
             'resolved_at' => now(),
         ]);
     }
+
+    protected static function booted(): void
+    {
+        // Al asignar un agente, notificarle
+        static::updated(function (Ticket $ticket) {
+            if ($ticket->wasChanged('assigned_to') && $ticket->assignee) {
+                $ticket->assignee->notify(new \App\Notifications\TicketAssigned($ticket));
+            }
+
+            // Al resolver, notificar al creador
+            if ($ticket->wasChanged('status') && $ticket->status === 'resolved') {
+                $ticket->creator->notify(new \App\Notifications\TicketResolved($ticket));
+            }
+        });
+    }
 }
