@@ -3,26 +3,32 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TicketResource\Pages;
+use App\Filament\Resources\TicketResource\RelationManagers;
+use App\Models\Department;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Models\Department;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use App\Filament\Resources\TicketResource\RelationManagers;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
+
     protected static ?string $navigationLabel = 'Tickets';
+
     protected static ?string $modelLabel = 'Ticket';
+
     protected static ?int $navigationSort = 3;
+
     protected static ?string $navigationGroup = 'Gestión';
 
     public static function form(Form $form): Form
@@ -47,20 +53,20 @@ class TicketResource extends Resource
                     Forms\Components\Select::make('status')
                         ->label('Estado')
                         ->options([
-                            'open'             => 'Abierto',
-                            'in_progress'      => 'En progreso',
+                            'open' => 'Abierto',
+                            'in_progress' => 'En progreso',
                             'waiting_response' => 'Esperando respuesta',
-                            'resolved'         => 'Resuelto',
-                            'closed'           => 'Cerrado',
+                            'resolved' => 'Resuelto',
+                            'closed' => 'Cerrado',
                         ])
                         ->default('open')
                         ->required(),
                     Forms\Components\Select::make('priority')
                         ->label('Prioridad')
                         ->options([
-                            'low'      => 'Baja',
-                            'medium'   => 'Media',
-                            'high'     => 'Alta',
+                            'low' => 'Baja',
+                            'medium' => 'Media',
+                            'high' => 'Alta',
                             'critical' => 'Crítica',
                         ])
                         ->default('medium')
@@ -77,7 +83,7 @@ class TicketResource extends Resource
                         )
                         ->searchable()
                         ->preload(),
-                    Forms\Components\SpatieMediaLibraryFileUpload::make('attachments')
+                    SpatieMediaLibraryFileUpload::make('attachments')
                         ->label('Archivos adjuntos')
                         ->collection('attachments')
                         ->multiple()
@@ -92,7 +98,7 @@ class TicketResource extends Resource
                         ->downloadable()
                         ->columnSpanFull(),
                     Forms\Components\Hidden::make('created_by')
-                        ->default(fn() => Auth::id()),
+                        ->default(fn () => Auth::id()),
                 ])->columns(2),
         ]);
     }
@@ -112,38 +118,38 @@ class TicketResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
-                    ->color(fn(string $state): string => match($state) {
-                        'open'             => 'info',
-                        'in_progress'      => 'warning',
+                    ->color(fn (string $state): string => match ($state) {
+                        'open' => 'info',
+                        'in_progress' => 'warning',
                         'waiting_response' => 'gray',
-                        'resolved'         => 'success',
-                        'closed'           => 'danger',
-                        default            => 'gray',
+                        'resolved' => 'success',
+                        'closed' => 'danger',
+                        default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state): string => match($state) {
-                        'open'             => 'Abierto',
-                        'in_progress'      => 'En progreso',
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'open' => 'Abierto',
+                        'in_progress' => 'En progreso',
                         'waiting_response' => 'Esperando respuesta',
-                        'resolved'         => 'Resuelto',
-                        'closed'           => 'Cerrado',
-                        default            => $state,
+                        'resolved' => 'Resuelto',
+                        'closed' => 'Cerrado',
+                        default => $state,
                     }),
                 Tables\Columns\TextColumn::make('priority')
                     ->label('Prioridad')
                     ->badge()
-                    ->color(fn(string $state): string => match($state) {
-                        'low'      => 'success',
-                        'medium'   => 'info',
-                        'high'     => 'warning',
+                    ->color(fn (string $state): string => match ($state) {
+                        'low' => 'success',
+                        'medium' => 'info',
+                        'high' => 'warning',
                         'critical' => 'danger',
-                        default    => 'gray',
+                        default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state): string => match($state) {
-                        'low'      => 'Baja',
-                        'medium'   => 'Media',
-                        'high'     => 'Alta',
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'low' => 'Baja',
+                        'medium' => 'Media',
+                        'high' => 'Alta',
                         'critical' => 'Crítica',
-                        default    => $state,
+                        default => $state,
                     }),
                 Tables\Columns\TextColumn::make('department.name')
                     ->label('Departamento')
@@ -167,18 +173,18 @@ class TicketResource extends Resource
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Estado')
                     ->options([
-                        'open'             => 'Abierto',
-                        'in_progress'      => 'En progreso',
+                        'open' => 'Abierto',
+                        'in_progress' => 'En progreso',
                         'waiting_response' => 'Esperando respuesta',
-                        'resolved'         => 'Resuelto',
-                        'closed'           => 'Cerrado',
+                        'resolved' => 'Resuelto',
+                        'closed' => 'Cerrado',
                     ]),
                 Tables\Filters\SelectFilter::make('priority')
                     ->label('Prioridad')
                     ->options([
-                        'low'      => 'Baja',
-                        'medium'   => 'Media',
-                        'high'     => 'Alta',
+                        'low' => 'Baja',
+                        'medium' => 'Media',
+                        'high' => 'Alta',
                         'critical' => 'Crítica',
                     ]),
                 Tables\Filters\SelectFilter::make('department')
@@ -187,6 +193,21 @@ class TicketResource extends Resource
                 Tables\Filters\SelectFilter::make('assigned_to')
                     ->label('Agente')
                     ->options(User::role('agent')->pluck('name', 'id')),
+                Filter::make('created_at')
+                    ->label('Fecha de creación')
+                    ->form([
+                        Forms\Components\DatePicker::make('from')->label('Desde'),
+                        Forms\Components\DatePicker::make('to')->label('Hasta'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['from'] ?? null,
+                            fn (Builder $query, $date) => $query->whereDate('created_at', '>=', $date)
+                        )->when(
+                            $data['to'] ?? null,
+                            fn (Builder $query, $date) => $query->whereDate('created_at', '<=', $date)
+                        );
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -202,7 +223,7 @@ class TicketResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
-        $user  = Auth::user();
+        $user = Auth::user();
 
         // Admin ve absolutamente todo
         if ($user->hasRole('admin')) {
@@ -236,10 +257,10 @@ class TicketResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTickets::route('/'),
+            'index' => Pages\ListTickets::route('/'),
             'create' => Pages\CreateTicket::route('/create'),
-            'edit'   => Pages\EditTicket::route('/{record}/edit'),
-            'view'   => Pages\ViewTicket::route('/{record}'),
+            'edit' => Pages\EditTicket::route('/{record}/edit'),
+            'view' => Pages\ViewTicket::route('/{record}'),
         ];
     }
 }
